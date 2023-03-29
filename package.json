@@ -1,0 +1,15 @@
+{
+  "name": "bowling-game",
+  "version": "1.0.0",
+  "description": "Web application using Angular and NodeJS for calculating bowling game scores",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tami",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  }
+}

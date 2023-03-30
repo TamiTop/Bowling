@@ -1,0 +1,36 @@
+<div class="container">
+    <div>
+        <h4>Enter your name and the score you rolled:</h4>
+    </div>
+    <br>
+
+    <form (ngSubmit)="onSubmit()" #rollForm="ngForm">
+        <div class="form-row">
+            <div class="col-xs-4">
+                <label>Name</label>
+                <input type="text" class="form-control" [(ngModel)]="playerName" name="name">
+            </div>
+
+            <div class="col-xs-3">
+                <label>Score</label>
+                <input type="number" class="form-control" [(ngModel)]="playerScore" name="score" min="0" max="10">
+                <!-- <div *ngIf="+this.playerScore > 10" style="color:red">The number cannot be greater than 10</div> -->
+                <div [hidden]="+this.playerScore <= 10" class="alert alert-danger">
+                    The number cannot be greater than 10
+                </div>
+                <div [hidden]="+this.playerScore >= 0" class="alert alert-danger">
+                    The number cannot be smaller than 0
+                </div>
+            </div>
+
+            <div class="col-xs-3">
+                <button type="submit" class="btn btn-primary"
+                    [disabled]="!this.playerName || !this.playerScore || +this.playerScore > 10 || +this.playerScore < 0">Submit</button>
+                <button type="button" class="btn btn-default" (click)="rollForm.reset()">Clear Form</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+<br>
+<hr>

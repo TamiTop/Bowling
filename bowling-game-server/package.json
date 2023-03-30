@@ -1,5 +1,5 @@
 {
-  "name": "bowling-game",
+  "name": "bowling-game-server",
   "version": "1.0.0",
   "description": "Web application using Angular and NodeJS for calculating bowling game scores",
   "main": "app.js",

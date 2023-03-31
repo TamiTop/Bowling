@@ -1,0 +1,22 @@
+/* TODO: change colors */
+.table-dark {
+    background-color: #3AAFA9;
+    color: #fff;
+}
+
+.table-dark th,
+.table-dark td {
+    border-color: #14191b;
+}
+
+.table-dark th {
+    background-color: #17252A;
+}
+
+.table-dark tbody tr:nth-of-type(odd) {
+    background-color: #2B7A78;
+}
+
+.center {
+    text-align: center;
+}

@@ -12,9 +12,9 @@ export class FormComponent {
   //@Output() gameComplete = new EventEmitter<boolean>();
 
   // Api URLs
-  private serverUrl = "http://localhost:4200";
-  private addRollApiUrl = "/addRollScore";
-  private getLeaderboardApiUrl = "/getLeaderboard;";
+  private readonly serverUrl = "http://localhost:4200";
+  private readonly addRollApiUrl = "/addRollScore";
+  private readonly getLeaderboardApiUrl = "/getLeaderboard;";
 
   // Data holders
   public gameOver = false;
@@ -35,10 +35,9 @@ export class FormComponent {
   // Submit button clicked
   public onSubmit(): void {
     this.playerName = this.playerName.trim();
-    this.playerError = '';
-    this.scoreError = '';
-
+    this.clearErrors();
     this.validateSubmition();
+
     if (!this.playerError && !this.scoreError) {
       this.nextFrameError = '';
       this.addRollScore();
@@ -49,6 +48,7 @@ export class FormComponent {
 
   // Move to the next frame button is clicked
   public nextFrame(): void {
+    this.clearErrors();
     this.validateFrameCondition();
 
     // Continue to the next frame
@@ -60,6 +60,7 @@ export class FormComponent {
           this.playerFrameRolls[player] = 0;
         }
         ++this.frameNumber;
+        this.playerFrameRolls = {};
       } else {
         //this.gameOver = true;
         // hide form and show leader score board
@@ -76,8 +77,6 @@ export class FormComponent {
 
   // Validate submition - the user can register up to 4 players, and 2 rolls for each frame (except for the last one if the player scored a strike or a spare)
   private validateSubmition(): void {
-    this.playerError = '';
-
     // add missing by name on each frame ****
     if (!this.playerFrameRolls[this.playerName]) {
       // Maximum of 4 players on each game
@@ -108,21 +107,39 @@ export class FormComponent {
 
   // Check that each player has two rolls 
   private validateFrameCondition(): void {
-    console.log(this.playerFrameRolls);
-    for (let player of Object.keys(this.playerFrameRolls)) {
-      if (this.playerFrameRolls[player] < 2) {
-        this.nextFrameError += `"${player}" is missing a roll score.`;
-        break;
+    console.log('this.playerFrameRolls', this.playerFrameRolls);
+    console.log('this.playerNames', this.playerNames);
+    // None players added
+    if (Object.keys(this.playerFrameRolls).length === 0) {
+      this.nextFrameError += `Missing player score rolls.`;
+    } else if (this.frameNumber === 1) {
+      // Check that every new player has two rolls
+      for (let player of Object.keys(this.playerFrameRolls)) {
+        console.log('im here 1')
+        console.log(player)
+        console.log(this.playerFrameRolls[player])
+        if (this.playerFrameRolls[player].length < 2) {
+          this.nextFrameError += `"${player}" is missing a roll score.`;
+          break;
+        }
+      }
+    } else {
+      // Check that every known player has two rolls
+      for (let player of this.playerNames) {
+        console.log('im here 2')
+
+        console.log(player);
+        if (this.playerFrameRolls[player].length < 2) {
+          this.nextFrameError += `"${player}" is missing a roll score.`;
+          break;
+        }
       }
     }
   }
 
   // Check if the player had a spare or a strike
   private isSpareOrStrike(arr: number[]): boolean {
-    const rollsSum = arr.reduce((a, b) => {
-      return a + b;
-    })
-
+    const rollsSum = arr.reduce((a, b) => a + b);
     if (rollsSum === 10) return true;
     return;
   }
@@ -130,5 +147,10 @@ export class FormComponent {
   // Send an http request to the server
   private addRollScore(): void {
 
+  }
+
+  private clearErrors() {
+    this.playerError = '';
+    this.scoreError = '';
   }
 }

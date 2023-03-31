@@ -15,11 +15,12 @@
             <div class="col-xs-4">
                 <label>Name</label>
                 <!-- Input  ******change to frame count-->
-                <div *ngIf="frameNumber === 1; else dropdownNames">
+                <!-- <div *ngIf="frameNumber === 1; else dropdownNames"> -->
+                <div>
                     <input type="text" class="form-control" [(ngModel)]="playerName" name="name">
                 </div>
                 <!-- Dropdown - nice feature but not actually needed, only if there is time left.. -->
-                <ng-template #dropdownNames>
+                <!-- <ng-template #dropdownNames>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle">name <span
                                 class="caret"></span></button>
@@ -27,7 +28,7 @@
                             <li>player.name</li>
                         </ul>
                     </div>
-                </ng-template>
+                </ng-template> -->
                 <div [hidden]="!playerError" class="alert alert-danger">
                     {{playerError}}
                 </div>

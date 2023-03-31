@@ -7,5 +7,14 @@ import { Component } from '@angular/core'
 })
 
 export class LeaderboardComponent {
+    leaderboard: leaderboardItem[] = [{ name: "tami", score: 1 }, { name: "tralal", score: 1 }];
 
+    private getUpdatedLeaderboard() {
+
+    }
+}
+
+interface leaderboardItem {
+    name: string;
+    score: number;
 }

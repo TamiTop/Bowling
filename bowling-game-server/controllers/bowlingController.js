@@ -1,16 +1,16 @@
 const Game = require('../models/game');
 
-class Controllers {
+class BowlingController {
     constructor() {
         this.game = new Game();
     }
 
     static getInstance() {
-        if (!Controllers.instance) {
-            Controllers.instance = new Controllers();
+        if (!BowlingController.instance) {
+            BowlingController.instance = new BowlingController();
         }
 
-        return Controllers.instance;
+        return BowlingController.instance;
     }
 
     addRollScore(req, res) {
@@ -42,4 +42,4 @@ class Controllers {
     }
 }
 
-module.exports = Controllers;
+module.exports = BowlingController;

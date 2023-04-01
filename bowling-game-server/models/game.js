@@ -17,8 +17,8 @@ class Game {
     // Return game's leaderboard
     getLeaderBoard() {
         const leaderboard = [];
-        for (const [key, value] of Object.entries(this.players)) {
-            leaderboard.push({ name: key, scores: value.scores, rolls: value.rolls })
+        for (const [name, stats] of Object.entries(this.players)) {
+            leaderboard.push({ name, scores: stats.scores, rolls: stats.rolls })
         }
 
         return leaderboard;

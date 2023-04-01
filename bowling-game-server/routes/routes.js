@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const controller = require('../controllers/controllers').getInstance();
+const controller = require('../controllers/bowlingController').getInstance();
 
 // Add player's roll score
 router.get('/addRollScore', controller.addRollScore.bind(controller));

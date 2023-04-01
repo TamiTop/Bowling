@@ -1,10 +1,8 @@
-<!-- <app-header></app-header> -->
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            <app-form [hidden]="gameOver"></app-form>
-
-            <app-leaderboard></app-leaderboard>
+            <app-form (isGameOver)="onGameOver($event)" [hidden]="isGameOver"></app-form>
+            <app-leaderboard [hidden]="!isGameOver"></app-leaderboard>
             <h3>Start a new game</h3>
         </div>
     </div>

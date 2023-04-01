@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { LeaderboardComponent } from './leaderboard/leaderboard.component';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,12 @@ import { Component } from '@angular/core';
 })
 
 export class AppComponent {
-  gameOver = false;
+  @ViewChild(LeaderboardComponent) leaderboardComponent: LeaderboardComponent;
+
+  isGameOver = false;
+
+  onGameOver(event: boolean) {
+    this.isGameOver = true;
+    this.leaderboardComponent.getLeaderboard();
+  }
 }

@@ -1,19 +1,17 @@
 <div class="container">
-    <div *ngIf="frameNumber > -1; else startTitle">
+    <div *ngIf="frameNumber > 0; else startTitle">
         <h1>Bowling Tournament Frame {{frameNumber}}</h1>
     </div>
     <ng-template #startTitle>
         <h1>Welcome to bowling tournament</h1>
     </ng-template>
     <hr>
-    <div *ngIf="frameNumber < 2; else started">
+    <br><br>
+    <div>
         <h4>Register the players and their rolls of the frame, up to 4 players in a game:</h4>
     </div>
-    <ng-template #started>
-        <h4>Fill the player rolls :</h4>
-        <!-- TODO: keep or empty? -->
-    </ng-template>
     <br>
+
 
     <!-- Sumbit new roll form -->
     <form (ngSubmit)="onSubmit()" #rollForm="ngForm">
@@ -21,21 +19,9 @@
         <div class="form-row">
             <div class="col-xs-4">
                 <label>Name</label>
-                <!-- Input  ******change to frame count-->
-                <!-- <div *ngIf="frameNumber < 2; else dropdownNames"> -->
                 <div>
                     <input type="text" class="form-control" [(ngModel)]="playerName" name="name">
                 </div>
-                <!-- Dropdown - nice feature but not actually needed, only if there is time left.. -->
-                <ng-template #started>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle">name <span
-                                class="caret"></span></button>
-                        <ul class="dropdown-menu w-100" *ngFor="let player of playerNames">
-                            <li>player.name</li>
-                        </ul>
-                    </div>
-                </ng-template>
                 <div [hidden]="!playerError" class="alert alert-danger">
                     {{playerError}}
                 </div>
@@ -60,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <!-- Form submit, clear and next frame buttons -->
+        <!-- Form "submit", "clear" and "next frame" buttons -->
         <div class="form-row">
             <div class="col-xs-5" style="padding-top: 2.15%;">
                 <button type="submit" class="btn btn-primary"

@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
+import axios from 'axios';
 
 @Component({
   selector: 'app-form',
@@ -9,15 +9,12 @@ import { Component, Output, EventEmitter } from '@angular/core';
 
 export class FormComponent {
   // Emit to the parent component when the game is complete to hide the form and show the leaderboard results
-  //@Output() gameComplete = new EventEmitter<boolean>();
+  @Output() isGameOver = new EventEmitter<boolean>();
 
-  // Api URLs
-  private readonly serverUrl = "http://localhost:4200";
+  // Api URL
   private readonly addRollApiUrl = "/addRollScore";
-  private readonly getLeaderboardApiUrl = "/getLeaderboard;";
 
   // Data holders
-  public gameOver = false;
   public frameNumber = -1;
   public playerScore = '';
   public playerName = '';
@@ -28,14 +25,14 @@ export class FormComponent {
   public scoreError = '';
   public nextFrameError = '';
 
-  // Contains the player names and the number of their rolls
+  // Contains the player names and their rolls
   private playerFrameRolls = {};
 
   //~~~~~~~ Methods ~~~~~~~
   // Submit button clicked
   public onSubmit(): void {
-    if (this.frameNumber = -1) {
-      // Game started
+    // Game started
+    if (this.frameNumber === -1) {
       this.frameNumber = 1;
     }
 
@@ -43,12 +40,11 @@ export class FormComponent {
     this.clearErrors();
     this.validateSubmition();
 
+    // Add roll score
     if (!this.playerError && !this.scoreError) {
       this.nextFrameError = '';
       this.addRollScore();
     }
-
-    console.log(`${this.playerName} scored ${this.playerScore}`);
   }
 
   // Move to the next frame button is clicked
@@ -61,49 +57,52 @@ export class FormComponent {
       if (this.frameNumber < 10) {
         // Reset frame rolls count
         for (let player of Object.keys(this.playerFrameRolls)) {
-          if (this.frameNumber === 1) this.playerNames.push(player);
-          this.playerFrameRolls[player] = 0;
+          this.playerFrameRolls[player] = [];
         }
         ++this.frameNumber;
         this.playerScore = '';
-        this.playerFrameRolls = {};
       } else {
-        this.gameOver = true;
-        // hide form and show leader score board
+        // Game is over - parent component should hide the form
+        this.isGameOver.emit(true);
       }
     }
   }
 
   public resetGameScores() {
-    this.gameOver = false;
     this.frameNumber = 1;
     this.playerFrameRolls = {};
     // http request to reset game on server
   }
 
-  // Validate submition - the user can register up to 4 players, and 2 rolls for each frame (except for the last one if the player scored a strike or a spare)
+  // Validate submition
   private validateSubmition(): void {
-    // add missing by name on each frame ****
     if (!this.playerFrameRolls[this.playerName]) {
       // Maximum of 4 players on each game
-      if (Object.keys(this.playerFrameRolls).length === 4) {
+      if (this.frameNumber > 1) {
+        this.playerError = 'Cannot assign new players after the first frame.';
+      } else if (Object.keys(this.playerFrameRolls).length === 4) {
         this.playerError = 'Already registered 4 players.';
       } else {
         // Register new player
-        this.playerFrameRolls[this.playerName] = [+this.playerScore];
-        // On strike, there won't be 2nd  roll on the current frame, therefore the next roll will be 0
-        if (+this.playerScore === 10) {
-          this.playerFrameRolls[this.playerName].push(0);
-        }
+        this.playerFrameRolls[this.playerName] = [];
       }
-    } else if (this.playerFrameRolls[this.playerName].length < 2) {
+    }
+
+    // Add roll
+    if (this.playerFrameRolls[this.playerName].length === 0) {
+      this.playerFrameRolls[this.playerName].push(+this.playerScore);
+
+      // On a strike, there won't be 2nd  roll on the current frame, therefore the next roll will be 0
+      if (+this.playerScore === 10) {
+        this.playerFrameRolls[this.playerName].push(0);
+      }
+    } else if (this.playerFrameRolls[this.playerName].length === 1) {
       // Validate that the second score is not greater than 10
-      if (this.playerFrameRolls[this.playerName][0] + +this.playerScore > 10) {
-        this.scoreError = `Score of both rolls cannot be greater than 10, previous roll was ${this.playerFrameRolls[this.playerName][0]}`;
-      } else {
+      if (this.playerFrameRolls[this.playerName][0] + +this.playerScore <= 10) {
         this.playerFrameRolls[this.playerName].push(+this.playerScore);
+      } else {
+        this.scoreError = `Score of both rolls cannot be greater than 10, previous roll was ${this.playerFrameRolls[this.playerName][0]}`;
       }
-      // Accept 3rd roll on the tenth frame after a spare or a strike
     } else if (this.frameNumber === 10 && this.isSpareOrStrike(this.playerFrameRolls[this.playerName])) {
       this.playerFrameRolls[this.playerName].push(+this.playerScore);
     } else {
@@ -111,23 +110,17 @@ export class FormComponent {
     }
   }
 
+
   // Check that each player has two rolls 
   private validateFrameCondition(): void {
+
     // None players added
     if (Object.keys(this.playerFrameRolls).length === 0) {
       this.nextFrameError += `Missing player score rolls.`;
-    } else if (this.frameNumber === 1) {
-      // Check that every new player has two rolls
-      for (let player of Object.keys(this.playerFrameRolls)) {
-        if (this.playerFrameRolls[player].length < 2) {
-          this.nextFrameError += `"${player}" is missing a roll score.`;
-          break;
-        }
-      }
     } else {
-      // Check that every known player has two rolls
-      for (let player of this.playerNames) {
-        if (this.playerFrameRolls[player].length < 2) {
+      // Check that every player has two rolls or three after bonus on the last frame
+      for (let player of Object.keys(this.playerFrameRolls)) {
+        if (this.playerFrameRolls[player].length < 2 || (this.frameNumber === 10 && this.isSpareOrStrike(this.playerFrameRolls[player]))) {
           this.nextFrameError += `"${player}" is missing a roll score.`;
           break;
         }
@@ -143,12 +136,18 @@ export class FormComponent {
   }
 
   // Send an http request to the server
-  private addRollScore(): void {
-
+  private async addRollScore(): Promise<void> {
+    try {
+      const response = await axios.get(`${this.addRollApiUrl}?name=${this.playerName}&score=${this.playerScore}`);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   private clearErrors() {
     this.playerError = '';
     this.scoreError = '';
+    this.nextFrameError = '';
   }
 }

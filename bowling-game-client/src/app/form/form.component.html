@@ -1,26 +1,33 @@
 <div class="container">
-    <div>
-        <h1>Bowling Frame {{frameNumber}}</h1>
+    <div *ngIf="frameNumber > -1; else startTitle">
+        <h1>Bowling Tournament Frame {{frameNumber}}</h1>
     </div>
+    <ng-template #startTitle>
+        <h1>Welcome to bowling tournament</h1>
+    </ng-template>
     <hr>
-    <div>
+    <div *ngIf="frameNumber < 2; else started">
         <h4>Register the players and their rolls of the frame, up to 4 players in a game:</h4>
     </div>
+    <ng-template #started>
+        <h4>Fill the player rolls :</h4>
+        <!-- TODO: keep or empty? -->
+    </ng-template>
     <br>
 
     <!-- Sumbit new roll form -->
     <form (ngSubmit)="onSubmit()" #rollForm="ngForm">
+        <!-- Name input, or dropdown (from the 2nd frame) -->
         <div class="form-row">
-            <!-- Name input, or dropdown (from the 2nd frame) -->
             <div class="col-xs-4">
                 <label>Name</label>
                 <!-- Input  ******change to frame count-->
-                <!-- <div *ngIf="frameNumber === 1; else dropdownNames"> -->
+                <!-- <div *ngIf="frameNumber < 2; else dropdownNames"> -->
                 <div>
                     <input type="text" class="form-control" [(ngModel)]="playerName" name="name">
                 </div>
                 <!-- Dropdown - nice feature but not actually needed, only if there is time left.. -->
-                <!-- <ng-template #dropdownNames>
+                <ng-template #started>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle">name <span
                                 class="caret"></span></button>
@@ -28,14 +35,14 @@
                             <li>player.name</li>
                         </ul>
                     </div>
-                </ng-template> -->
+                </ng-template>
                 <div [hidden]="!playerError" class="alert alert-danger">
                     {{playerError}}
                 </div>
             </div>
         </div>
+        <!-- Score input -->
         <div class="form-row">
-            <!-- Score input -->
             <div class="col-xs-3">
                 <label>Score</label>
                 <input type="number" class="form-control" [(ngModel)]="playerScore" name="score" min="0" max="10">
@@ -53,23 +60,19 @@
                 </div>
             </div>
         </div>
+        <!-- Form submit, clear and next frame buttons -->
         <div class="form-row">
-            <!-- Form submit and clear buttons -->
-            <div class="col-xs-3" style="padding-top: 2.15%;">
+            <div class="col-xs-5" style="padding-top: 2.15%;">
                 <button type="submit" class="btn btn-primary"
                     [disabled]="!this.playerName || !this.playerScore || +this.playerScore > 10 || +this.playerScore < 0">Submit</button>
                 &nbsp;
-                <button type="button" class="btn btn-default"
+                <button type="button" class="btn btn-default" [disabled]="!playerName && !playerScore"
                     (click)="rollForm.reset(); nextFrameError=''; playerError=''">Clear
                     Form</button>
-            </div>
-        </div>
-        <div class="form-row">
-            <!-- Form next frame button -->
-            <div class="col-xs-3" style="padding-top: 2.15%;">
-                <button type="button" class="btn btn-primary" [disabled]="nextFrameError" (click)="nextFrame()">Move to
-                    the
-                    next frame</button>
+                &nbsp;
+                <button type="button" class="btn btn-primary" [disabled]="nextFrameError || frameNumber === -1"
+                    (click)="nextFrame()">
+                    Move to the next frame</button>
             </div>
         </div>
     </form>

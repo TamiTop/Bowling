@@ -1,11 +1,6 @@
-.center {
+.center-img {
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: 50%;
-}
-
-h3 {
-    color: black;
-    text-align: center;
 }

@@ -18,7 +18,7 @@ export class FormComponent {
 
   // Data holders
   public gameOver = false;
-  public frameNumber = 1;
+  public frameNumber = -1;
   public playerScore = '';
   public playerName = '';
   public playerNames: string[] = [];
@@ -34,6 +34,11 @@ export class FormComponent {
   //~~~~~~~ Methods ~~~~~~~
   // Submit button clicked
   public onSubmit(): void {
+    if (this.frameNumber = -1) {
+      // Game started
+      this.frameNumber = 1;
+    }
+
     this.playerName = this.playerName.trim();
     this.clearErrors();
     this.validateSubmition();
@@ -60,9 +65,10 @@ export class FormComponent {
           this.playerFrameRolls[player] = 0;
         }
         ++this.frameNumber;
+        this.playerScore = '';
         this.playerFrameRolls = {};
       } else {
-        //this.gameOver = true;
+        this.gameOver = true;
         // hide form and show leader score board
       }
     }
@@ -107,17 +113,12 @@ export class FormComponent {
 
   // Check that each player has two rolls 
   private validateFrameCondition(): void {
-    console.log('this.playerFrameRolls', this.playerFrameRolls);
-    console.log('this.playerNames', this.playerNames);
     // None players added
     if (Object.keys(this.playerFrameRolls).length === 0) {
       this.nextFrameError += `Missing player score rolls.`;
     } else if (this.frameNumber === 1) {
       // Check that every new player has two rolls
       for (let player of Object.keys(this.playerFrameRolls)) {
-        console.log('im here 1')
-        console.log(player)
-        console.log(this.playerFrameRolls[player])
         if (this.playerFrameRolls[player].length < 2) {
           this.nextFrameError += `"${player}" is missing a roll score.`;
           break;
@@ -126,9 +127,6 @@ export class FormComponent {
     } else {
       // Check that every known player has two rolls
       for (let player of this.playerNames) {
-        console.log('im here 2')
-
-        console.log(player);
         if (this.playerFrameRolls[player].length < 2) {
           this.nextFrameError += `"${player}" is missing a roll score.`;
           break;
@@ -141,7 +139,7 @@ export class FormComponent {
   private isSpareOrStrike(arr: number[]): boolean {
     const rollsSum = arr.reduce((a, b) => a + b);
     if (rollsSum === 10) return true;
-    return;
+    return false;
   }
 
   // Send an http request to the server

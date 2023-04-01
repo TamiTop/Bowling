@@ -16,7 +16,3 @@
 .table-dark tbody tr:nth-of-type(odd) {
     background-color: #2B7A78;
 }
-
-.center {
-    text-align: center;
-}

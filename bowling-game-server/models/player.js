@@ -15,7 +15,6 @@ class Player {
             this.rolls.push([rollScore]);
             this.scores.push(rollScore);
         } else {
-
             // Apply bonus score from a spare or a strike
             if (this.bonusCount) {
                 this.scores[this.frameIndex - 1] += rollScore;
@@ -31,7 +30,6 @@ class Player {
                 // Update frame index to -1 to let the system know that the player is done playing
                 this.frameIndex = -1;
             } else {
-
                 // Add second frame's roll
                 if (this.rolls[this.frameIndex] && this.rolls[this.frameIndex].length < 2) {
 
@@ -44,7 +42,6 @@ class Player {
                         ++this.frameIndex;
                     }
                 } else {
-
                     // Add next frame's first roll
                     this.rolls.push([rollScore]);
                     this.scores.push(this.scores[this.frameIndex - 1] + rollScore);

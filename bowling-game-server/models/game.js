@@ -8,7 +8,9 @@ class Game {
 
     // Create a new player if doesnt exists, return player's instance
     getPlayerData(name) {
-        if (!this.players[name]) this.players[name] = new Player(name);
+        if (!this.players[name]) {
+            this.players[name] = new Player(name);
+        }
         return this.players[name];
     }
 

@@ -42,7 +42,7 @@ export class FormComponent {
 
     // Add roll score
     if (!this.playerError && !this.scoreError) {
-      this.formLog = `The Player "${this.playerName}" rolled a score of ${this.playerScore}.`;
+      this.printLog();
       this.nextFrameError = '';
       this.addRollScore();
     }
@@ -150,5 +150,13 @@ export class FormComponent {
     this.playerError = '';
     this.scoreError = '';
     this.nextFrameError = '';
+  }
+
+  private printLog() {
+    if (+this.playerScore === 10) {
+      this.formLog = `"${this.playerName}" rolled a strike! the next roll will be automatically 0.`;
+    } else {
+      this.formLog = `"${this.playerName}" rolled a score of ${this.playerScore}.`;
+    }
   }
 }

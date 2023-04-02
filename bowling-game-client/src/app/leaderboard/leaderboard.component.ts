@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AppService } from '../app.service';
+
 import axios from 'axios';
 
 @Component({
@@ -8,13 +10,21 @@ import axios from 'axios';
 })
 
 export class LeaderboardComponent {
-    private readonly getLeaderboardApiUrl = "/getLeaderboard";
+    private readonly getLeaderboardApiUrl = `${this.appService.apiUrl}getLeaderboard`;
     public leaderboard: ILeaderboard;
+
+    constructor(
+        private appService: AppService,
+    ) {}
 
     // Get the leaderboard from the server
     public async getLeaderboard(): Promise<void> {
         try {
-            const response = await axios.get(this.getLeaderboardApiUrl);
+            const response = await axios.get(this.getLeaderboardApiUrl, {
+                headers: {
+                  'Access-Control-Allow-Origin': '*'
+                }
+              });
             if (response.data) {
                 this.leaderboard = response.data;
                 this.leaderboard.sort((a, b) => b.stats[b.stats.length - 1].score - 1 - a.stats[a.stats.length - 1].score - 1);

@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { AppService } from '../app.service';
 import axios from 'axios';
 
 @Component({
@@ -12,7 +13,7 @@ export class FormComponent {
   @Output() isGameOver = new EventEmitter<boolean>();
 
   // Api URL
-  private readonly addRollApiUrl = "/addRollScore";
+  private readonly addRollApiUrl = `${this.appService.apiUrl}addRollScore`;
 
   // Data holders
   public frameNumber = -1;
@@ -27,6 +28,10 @@ export class FormComponent {
 
   // Contains the player names and their rolls
   private playerFrameRolls = {};
+
+  constructor(
+    private appService: AppService,
+  ) {}
 
   //~~~~~~~ Methods ~~~~~~~
   // Submit button clicked
@@ -96,7 +101,11 @@ export class FormComponent {
   // Send an http request to the server
   private async addRollScore(): Promise<void> {
     try {
-      const response = await axios.get(`${this.addRollApiUrl}?name=${this.playerName}&roll=${this.playerScore}`);
+      const response = await axios.get(`${this.addRollApiUrl}?name=${this.playerName}&roll=${this.playerScore}`, {
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        }
+      });
       console.log(response);
     } catch (error) {
       console.error(error);

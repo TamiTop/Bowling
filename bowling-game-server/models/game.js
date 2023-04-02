@@ -11,6 +11,7 @@ class Game {
         if (!this.players[name]) {
             this.players[name] = new Player(name);
         }
+
         return this.players[name];
     }
 
@@ -18,11 +19,12 @@ class Game {
     getLeaderBoard() {
         const leaderboard = [];
 
-        console.log(this.players);
-        for (const player of Object.keys(this.players)) {
-            const playerScores = this.players[player].calculateScores();
-            console.log(playerScores);
-            leaderboard.push({ name: this.players[player].name, stats: playerScores })
+        for (const playerName in this.players) {
+            const player = this.getPlayer(playerName);
+            leaderboard.push({
+                name: player.name,
+                stats: player.calculateScores()
+            });
         }
 
         return leaderboard;

@@ -1,17 +1,3 @@
-body {
-    background-color: #a59dad;
-    color: black;
-}
-
-.center {
-    text-align: center;
-}
-
 h3 {
-    color: black;
     text-align: center;
-}
-
-container {
-    background-color: black !important;
 }

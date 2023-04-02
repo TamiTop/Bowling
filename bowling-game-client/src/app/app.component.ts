@@ -13,7 +13,7 @@ export class AppComponent {
   @ViewChild(LeaderboardComponent) leaderboardComponent: LeaderboardComponent;
   @ViewChild(FormComponent) formComponent: FormComponent;
 
-  restartGameApiUrl = '/resetGame';
+  private readonly restartGameApiUrl = '/resetGame';
   isGameOver = false;
 
   onGameOver(event: boolean) {

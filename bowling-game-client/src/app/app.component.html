@@ -1,9 +1,13 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
+            <br>
+            <img src="../favicon.ico" alt="bowling-img" class="bowling-logo">
             <app-form (isGameOver)="onGameOver($event)" [hidden]="isGameOver"></app-form>
-            <app-leaderboard [hidden]="!isGameOver"></app-leaderboard>
-            <h3 (click)="resetGame()">Start a new game</h3>
+            <div [hidden]="!isGameOver">
+                <app-leaderboard></app-leaderboard>
+                <h3 (click)="resetGame()">Start a new game</h3>
+            </div>
         </div>
     </div>
 </div>

@@ -1,3 +1,9 @@
+h1 {
+    color: black;
+    text-align: center;
+    font-family: 'Brush Script MT', cursive;
+}
+
 .table-dark {
     background-color: #3AAFA9;
     color: #fff;

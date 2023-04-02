@@ -6,7 +6,7 @@
         <thead>
             <tr>
                 <th></th>
-                <ng-container *ngFor="let frame of [1,2,3,4,5,6,7,8,9, 10]">
+                <ng-container *ngFor="let frame of [1,2,3,4,5,6,7,8,9,10]">
                     <th class="center">Frame {{ frame }}</th>
                 </ng-container>
             </tr>
@@ -15,29 +15,28 @@
 
         <!-- Table body -->
         <tbody>
-            <ng-container *ngFor="let player of players">
+            <ng-container *ngFor="let player of leaderboard">
                 <tr>
                     <td class="name">{{ player.name }}</td>
                     <ng-container colspan="2">
                         <td *ngFor="let frame of [1,2,3,4,5,6,7,8,9,10]">
-
                             <!-- Internal table -->
                             <table>
                                 <tbody>
                                     <tr class="trans">
                                         <div class="cont">
                                             <div class="score">
-                                                {{player.scores[frame-1]}}
+                                                {{player.stats[frame-1].score}}
                                             </div>
                                             <div class="rolls">
                                                 <div class="roll">
-                                                    {{player.rolls[frame-1][0]}}
+                                                    {{player.stats[frame-1].rolls[0]}}
                                                 </div>
                                                 <div class="roll">
-                                                    {{player.rolls[frame-1][1]}}
+                                                    {{player.stats[frame-1].rolls[1]}}
                                                 </div>
-                                                <div *ngIf="player.rolls[frame-1].length > 2" class="roll">
-                                                    {{player.rolls[frame-1][2]}}
+                                                <div *ngIf="player.stats[frame-1].rolls.length > 2" class="roll">
+                                                    {{player.stats[frame-1].rolls[2]}}
                                                 </div>
                                             </div>
                                         </div>

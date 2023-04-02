@@ -4,6 +4,12 @@ h1 {
     font-family: 'Brush Script MT', cursive;
 }
 
+.form-log {
+    font-size: large;
+    color: #165351;
+    font-weight: bold;
+}
+
 .btn-primary,
 .btn-primary:hover,
 .btn-primary:active,

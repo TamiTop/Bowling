@@ -15,7 +15,7 @@
 
     <!-- Sumbit new roll form -->
     <form (ngSubmit)="onSubmit()" #rollForm="ngForm">
-        <!-- Name input, or dropdown (from the 2nd frame) -->
+        <!-- Name input -->
         <div class="form-row">
             <div class="col-xs-4">
                 <label>Name</label>
@@ -63,4 +63,6 @@
         </div>
     </form>
 </div>
-<br>
+
+<br><br>
+<div class="form-log container">{{formLog}}</div>

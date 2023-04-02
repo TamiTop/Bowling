@@ -138,7 +138,7 @@ export class FormComponent {
   // Send an http request to the server
   private async addRollScore(): Promise<void> {
     try {
-      const response = await axios.get(`${this.addRollApiUrl}?name=${this.playerName}&score=${this.playerScore}`);
+      const response = await axios.get(`${this.addRollApiUrl}?name=${this.playerName}&roll=${this.playerScore}`);
       console.log(response);
     } catch (error) {
       console.error(error);

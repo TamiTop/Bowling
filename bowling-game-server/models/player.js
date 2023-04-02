@@ -2,57 +2,94 @@
 class Player {
     constructor(name) {
         this.name = name;
-        this.scores = [];
-        this.rolls = []; // Array of arrays
-        this.bonusCount = 0;
-        this.frameIndex = 0;
+        this.rolls = []; // : [ frame ][ rolls ] => [[2,3][10,0][6,4]...[6,4,3]]
+        this.currentFrame = 1;
     }
 
-    // Score calculation logic
-    calculateScore(rollScore) {
-        // First roll
-        if (this.rolls.length === 0 && this.scores.length === 0) {
-            this.rolls.push([rollScore]);
-            this.scores.push(rollScore);
+    // Add roll score and check if its closing the frame
+    addRollScore(roll) {
+        if (this.rolls[this.currentFrame - 1]) {
+            this.rolls[this.currentFrame - 1].push(+roll);
         } else {
-            // Apply bonus score from a spare or a strike
-            if (this.bonusCount) {
-                this.scores[this.frameIndex - 1] += rollScore;
-                --this.bonusCount;
+            this.rolls[this.currentFrame - 1] = [+roll];
+            // On a strike push 0 as the second roll
+            if (+roll === 10) {
+                this.rolls[this.currentFrame - 1].push(0);
             }
+        }
+        if (this.isClosedFrame()) {
+            ++this.currentFrame;
+        }
+    }
 
-            // 3rd roll after a spare or a strike on the last round
-            if (this.frameIndex === 10) {
-                if (this.bonusCount && this.rolls[9].length === 2) {
-                    this.rolls[9].push(rollScore);
-                    this.scores[9] += rollScore;
-                }
-                // Update frame index to -1 to let the system know that the player is done playing
-                this.frameIndex = -1;
-            } else {
-                // Add second frame's roll
-                if (this.rolls[this.frameIndex] && this.rolls[this.frameIndex].length < 2) {
-                    // If the frame is a spare
-                    if (this.rolls[this.frameIndex][0] + rollScore === 10) {
-                        ++this.bonusCount;
-                    }
-                    this.rolls[this.frameIndex].push(rollScore);
-                    this.scores[this.frameIndex] += rollScore;
-                    ++this.frameIndex;
+    // Check if the roll is closing the frame
+    isClosedFrame() {
+        const frameRolls = this.rolls[this.currentFrame - 1];
+
+        if (this.currentFrame === 10) {
+            const currentFrameScore = this.sumRollsOfFrame(this.rolls[this.currentFrame - 1]);
+
+            // If the score is greater than 10 after third roll or the first two rolls didnt achieve a bonus
+            if (currentFrameScore > 10 || (frameRolls.length === 2 && currentFrameScore < 10)) {
+                return true;
+            }
+        } else if (frameRolls.length === 2) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // Return the sum of the rolls
+    sumRollsOfFrame(rolls) {
+        let frameRollScore = 0;
+
+        for (const roll of rolls) {
+            frameRollScore += roll;
+        }
+
+        return frameRollScore;
+    }
+
+    // Calculate player scores
+    calculateScores() {
+        const gameData = []; // : [{rolls: score: }{..]
+        let previousRollBonus = 0;
+
+        for (let i = 0; i < this.rolls.length; i++) {
+            let frameRollScore = this.sumRollsOfFrame(this.rolls[i]);
+
+            // Apply bonus on previous frame score
+            if (previousRollBonus) {
+                if (previousRollBonus >= 2) {
+                    gameData[i - 1].score += frameRollScore;
                 } else {
-                    // Add next frame's first roll
-                    this.rolls.push([rollScore]);
-                    this.scores.push(this.scores[this.frameIndex - 1] + rollScore);
+                    gameData[i - 1].score += this.rolls[i][0];
+                }
+                previousRollBonus = 0;
+            }
+
+            // If there is bonus to apply on the next frame
+            if (frameRollScore === 10) {
+                ++previousRollBonus;
+                // Also a strike - add another bonus
+                if (this.rolls[i][0] === 10) {
+                    ++previousRollBonus;
                 }
             }
-        }
-        // If the frame is a strike
-        if (rollScore === 10) {
-            this.bonusCount = 2;
-            this.rolls.at(-1).push(0);
-            ++this.frameIndex;
+
+            // Add last frame score to this frame
+            if (gameData[i - 1]?.score) {
+                frameRollScore += gameData[i - 1].score;
+            }
+
+            gameData.push({
+                rolls: this.rolls[i],
+                score: frameRollScore
+            });
         }
 
+        return gameData;
     }
 }
 

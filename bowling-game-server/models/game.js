@@ -7,7 +7,7 @@ class Game {
     }
 
     // Create a new player if doesnt exists, return player's instance
-    getPlayerData(name) {
+    getPlayer(name) {
         if (!this.players[name]) {
             this.players[name] = new Player(name);
         }
@@ -17,14 +17,27 @@ class Game {
     // Return game's leaderboard
     getLeaderBoard() {
         const leaderboard = [];
-        for (const [name, stats] of Object.entries(this.players)) {
-            leaderboard.push({ name, scores: stats.scores, rolls: stats.rolls })
+
+        console.log(this.players);
+        for (const player of Object.keys(this.players)) {
+            const playerScores = this.players[player].calculateScores();
+            console.log(playerScores);
+            leaderboard.push({ name: this.players[player].name, stats: playerScores })
         }
 
         return leaderboard;
     }
 
-    // Reset the game
+    addRollScore(name, roll) {
+        const player = this.getPlayer(name);
+        player.addRollScore(roll)
+    }
+
+    isGameEnded(name) {
+        const player = this.getPlayer(name);
+        return player.currentFrame > 10;
+    }
+
     resetGame() {
         this.players = {};
     }

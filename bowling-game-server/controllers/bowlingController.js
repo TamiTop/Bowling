@@ -47,6 +47,10 @@ class BowlingController {
         this.game.resetGame();
         res.status(200).send('Game restarted');
     }
+
+    checkStatus(req, res) {
+        res.status(200).send('Up and running');
+    }
 }
 
 module.exports = BowlingController;

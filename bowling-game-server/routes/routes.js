@@ -2,6 +2,9 @@ const router = require('express').Router();
 const controller = require('../controllers/bowlingController').getInstance();
 
 // Add player's roll score
+router.get('/status', controller.checkStatus.bind(controller));
+
+// Add player's roll score
 router.get('/addRollScore', controller.addRollScore.bind(controller));
 
 // Get leaderboard

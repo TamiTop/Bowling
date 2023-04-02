@@ -68,13 +68,14 @@ export class FormComponent {
     }
   }
 
+  // Reset game score from parent
   public resetGameScores() {
     this.frameNumber = 1;
     this.playerFrameRolls = {};
-    // http request to reset game on server
+    this.clearErrors();
   }
 
-  // Validate submition
+  // Validate submition and add roll
   private validateSubmition(): void {
     if (!this.playerFrameRolls[this.playerName]) {
       // Maximum of 4 players on each game

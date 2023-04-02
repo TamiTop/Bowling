@@ -3,7 +3,7 @@
         <div class="col-xs-12">
             <app-form (isGameOver)="onGameOver($event)" [hidden]="isGameOver"></app-form>
             <app-leaderboard [hidden]="!isGameOver"></app-leaderboard>
-            <h3>Start a new game</h3>
+            <h3 (click)="resetGame()">Start a new game</h3>
         </div>
     </div>
 </div>

@@ -59,10 +59,10 @@ class Player {
         for (let i = 0; i < this.rolls.length; i++) {
             let frameRollScore = this.sumRollsOfFrame(this.rolls[i]);
 
-            // Apply bonus on previous frame score
+            // Apply bonus of previous frame score
             if (previousRollBonus) {
                 if (previousRollBonus >= 2) {
-                    gameData[i - 1].score += frameRollScore;
+                    gameData[i - 1].score += this.rolls[i][0] + this.rolls[i][1];
                 } else {
                     gameData[i - 1].score += this.rolls[i][0];
                 }

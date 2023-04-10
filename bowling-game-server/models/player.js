@@ -61,10 +61,10 @@ class Player {
 
             // Apply bonus of previous frame score
             if (previousRollBonus) {
-                if (previousRollBonus >= 2) {
-                    gameData[i - 1].score += this.rolls[i][0] + this.rolls[i][1];
-                } else {
-                    gameData[i - 1].score += this.rolls[i][0];
+                gameData[i - 1].score += this.rolls[i][0];
+                // Strike
+                if (previousRollBonus > 1) {
+                    gameData[i - 1].score += this.rolls[i][1];
                 }
                 previousRollBonus = 0;
             }
@@ -77,6 +77,7 @@ class Player {
                     ++previousRollBonus;
                 }
             }
+
 
             // Add last frame score to this frame
             if (gameData[i - 1]?.score) {
